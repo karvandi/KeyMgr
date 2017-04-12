@@ -34,8 +34,8 @@ void displayHelp( char *argv )
 		cerr << "\t" << argv << " [-h] [-d] [-F] [-S] [-f <config file path/name]" <<endl<<endl;
 		cerr << "\t\t-l : log detailed information (/var/log/syslog)." <<endl;
 		cerr << "\t\t-h : displays this help screen." <<endl;
-		cerr << "\t\t-f <database file> : full path to the ssl database file." <<endl;
-		cerr << "\t\t         (default) ./ssl/" << string(argv).substr(2) << ".cfg" <<endl;
+		cerr << "\t\t-f <database file> : full path to the certificates/database directory." <<endl;
+		cerr << "\t\t         (default) ./ssl/" <<endl;
 		cerr <<endl;
 }
 
@@ -454,7 +454,7 @@ void verifyMenu() {
 				if ( cacert == "" ) break;
 				
 				cout <<endl<< "\tadd trusty: " << ossl.addTrusty( cacert.c_str()) <<endl;
-				cout <<endl<< "\tpress Enter to Continue..." <<endl; getline ( cin, in );
+				cout <<endl<< "\tpress Enter to Continue... "; getline ( cin, in );
 				break;
 			}
 
@@ -489,7 +489,7 @@ void verifyMenu() {
 						cout <<endl<< "\t" << i << ") Non Self-Signed Certificate: Skipped" <<endl<<endl;
 				}
 				
-				cout <<endl<< "\tpress Enter to Continue..." <<endl; getline ( cin, in );
+				cout <<endl<< "\tpress Enter to Continue... "; getline ( cin, in );
 				break;
 			}
 			
@@ -525,7 +525,7 @@ void verifyMenu() {
 					else cout << "\t   error (" << ossl.getVerifyERRNumber() << "): " << ossl.getVerifyERRString() <<endl;
 					
 				}
-				cout <<endl<< "\tpress Enter to Continue..." <<endl; getline ( cin, in );
+				cout <<endl<< "\tpress Enter to Continue... "; getline ( cin, in );
 				break;
 			}
 			
@@ -571,7 +571,7 @@ void verifyMenu() {
 					
 				}
 
-				cout <<endl<< "\tpress Enter to Continue..." <<endl; getline ( cin, in );
+				cout <<endl<< "\tpress Enter to Continue... "; getline ( cin, in );
 				break;
 			}
 			
@@ -656,8 +656,7 @@ void CertMenu() {
 
 				cout << "\twrite Cert. Sign Req. " << SSL_dir << in << " : " << (rc = ossl.writeCSR( in.c_str())) <<endl;
 		
-				cout <<endl<< "\tpress Enter to Continue..." <<endl; getline ( cin, in );
-				//ClearScreen();
+				cout <<endl<< "\tpress Enter to Continue... "; getline ( cin, in );
 				break;
 			}
 
@@ -689,9 +688,7 @@ void CertMenu() {
 
 				cout << "\twrite Cert. Sign Req. " << SSL_dir << in << " : " << (rc = ossl.writeCSR( in.c_str())) <<endl;
 		
-				cout <<endl<< "\tpress Enter to Continue..." <<endl;
-				getline ( cin, in );
-				//ClearScreen();
+				cout <<endl<< "\tpress Enter to Continue... "; getline ( cin, in );
 				break;
 			}
 
@@ -723,9 +720,7 @@ void CertMenu() {
 				
 				cout << "\twrite Cert. Sign Req. " << SSL_dir << in << " : " << (rc = ossl.writeCSR( in.c_str())) <<endl;
 		
-				cout <<endl<< "\tpress Enter to Continue..." <<endl;
-				getline ( cin, in );
-				//ClearScreen();
+				cout <<endl<< "\tpress Enter to Continue... "; getline ( cin, in );
 				break;
 			}
 
@@ -762,10 +757,12 @@ void CAMenu() {
 		cout <<"\t\t2) Generate CA CSR (Intermediate CA)" <<endl;
 		cout <<"\t\t3) Generate CA's Self-signed Root Certificate" <<endl<<endl;
 
-		//cout <<"\t\t4) Load CA keypair and Certificate" <<endl;
 		cout <<"\t\t4) Sign Certificate Request (CSR)" <<endl<<endl;
 		
 		cout <<"\t\t5) Verify Cert. Signature against CA Cert. pub. key." <<endl<<endl;
+
+		cout <<"\t\t6) Revoke a certificate" <<endl;
+		cout <<"\t\t7) Revert a revoked certificate" <<endl<<endl;
 
 		cout <<endl<< "\t\tr) return to previouse menu" <<endl;
 		cout             << "\t\tq) exit" <<endl<<endl<<endl<< "\t\t> ";
@@ -815,7 +812,6 @@ void CAMenu() {
 				cout << "\twrite Cert. Sign Req. " << SSL_dir << in << " : " << (rc = ossl.writeCSR( in.c_str())) <<endl;
 		
 				cout <<endl<< "\tpress Enter to Continue... "; getline ( cin, in );
-				//ClearScreen();
 				break;
 			}
 
@@ -928,7 +924,7 @@ void CAMenu() {
 				
 				cout <<endl<< "\t-----------------------------------------------------" <<endl<<endl;
 
-				cout << "\tIssuer: " << ossl.certIssuer() << endl;
+				cout << "\t Issuer: " << ossl.certIssuer() << endl;
 				cout << "\tSubject: " << ossl.certSubject() << endl;
 				cout << "\tSubject hash: " << ossl.certSubjectHash() << endl<<endl;
 				cout << "\t     Issue date: " << formattedGMTTime( ossl.certIssueTime()) <<endl;
@@ -951,7 +947,6 @@ void CAMenu() {
 				cout << "\twrite Certificate: "  << SSL_dir << in << " : " << ( rc = ossl.writeCertificate( in.c_str())) <<endl;
 		
 				cout <<endl<< "\tpress Enter to Continue... "; getline ( cin, in );
-				//ClearScreen();
 				break;
 			}
 
@@ -967,7 +962,7 @@ void CAMenu() {
 				cout <<endl<< "\tread CA Certificate: " << ( rc = ossl.readCACert( cacert.c_str())) <<endl;
 				if ( rc < 1 ) {
 					cout <<endl<< "\tERROR: Failed to load CA certificate file!?" <<endl<<endl;
-					cout <<endl<< "\tpress Enter to Continue..." <<endl; getline ( cin, in );
+					cout <<endl<< "\tpress Enter to Continue... "; getline ( cin, in );
 					break;
 				}
 				cout <<endl<< "\t-----------------------------------------------------" <<endl;
@@ -978,15 +973,13 @@ void CAMenu() {
 				cout << "\tread Certificate: " << ( rc = ossl.readCertificate( cert.c_str())) <<endl;
 				if ( rc < 1 ) {
 					cout <<endl<< "\tERROR: Failed to load certificate file!?" <<endl<<endl;
-					cout <<endl<< "\tpress Enter to Continue..." <<endl; getline ( cin, in );
+				cout <<endl<< "\tpress Enter to Continue... "; getline ( cin, in );
 					break;
 				}
 				
-				//sleep( 1 );
-				//ClearScreen(); cout <<endl<<endl;
 				cout <<endl<< "\t-----------------------------------------------------" <<endl;
 				
-				cout << "\tIssuer: " << ossl.certIssuer() << endl;
+				cout << "\t Issuer: " << ossl.certIssuer() << endl;
 				cout << "\tSubject: " << ossl.certSubject() << endl;
 				cout << "\tSubject hash: " << ossl.certSubjectHash() << endl<<endl;
 				cout << "\t     Issue date: " << formattedGMTTime( ossl.certIssueTime()) <<endl;
@@ -998,8 +991,146 @@ void CAMenu() {
 				
 				
 				cout <<endl<< "\tVerify Cert: " << ossl.verifyCertByCACert_str( 0 ) << endl<<endl;
-				cout <<endl<< "\tpress Enter to Continue..." <<endl; getline ( cin, in );
-				//ClearScreen();
+				cout <<endl<< "\tpress Enter to Continue... "; getline ( cin, in );
+				break;
+			}
+
+			case '6' : { // Revoke certificate
+			
+				int val;
+				string in, sn;
+				
+				cout <<endl<< "\tEnter Certificate's serial number: "; getline ( cin, sn );
+				
+				if ( trim(sn).length() < 1 || sn.length() > 10 || ! isNumeric( sn ) ) {
+					cout <<endl<< "\twrong value entered!? " << sn <<endl;
+					sleep( 2 );
+					break;
+				}
+
+				unsigned int serial = atoi( sn.c_str() );
+				char fname[64];
+				sprintf( fname, "dbase/issued/%010u", serial );
+				
+				cout <<endl<< "\tloading certificate in database: " << SSL_dir << fname <<endl;
+				cout <<endl<< "\tread Certificate: " << ( val = ossl.readCertificate( fname )) <<endl;
+				
+				if ( val < 1 )
+					cout <<endl<< "\tERROR: reading certificate failes!?" <<endl;
+				else {
+				
+					cout <<endl<< "\t-----------------------------------------------------" <<endl;
+					
+					cout << "\t Issuer: " << ossl.certIssuer() << endl;
+					cout << "\tSubject: " << ossl.certSubject() << endl;
+					cout << "\t     Issue date: " << formattedGMTTime( ossl.certIssueTime()) <<endl;
+					cout << "\texpiration date: " << formattedGMTTime( ossl.certExpireTime()) <<endl<<endl;
+					cout << "\tCert.  Serial: " << ossl.certSerial() <<endl;
+
+					cout <<endl<<endl<< "\tRevoke the certificate (y/n)? "; getline ( cin, in );
+					
+					if ( trim( in ).length() < 1 || in != "y" )
+						cout <<endl<<"\tCancelled!" <<endl<<endl;
+					else				
+						cout <<endl<< "\trevoke ceritifcate; date: " << formattedGMTTime( ossl.revokeCertificate( serial )) <<endl;
+				}
+
+				cout <<endl<< "\tpress Enter to Continue... "; getline ( cin, in );
+				break;
+			}
+			
+			case '7' : { // Revert a revoked certificate
+				
+				int val;
+				string in, sn;
+				
+				cout <<endl<< "\tEnter Certificate's serial number: "; getline ( cin, sn );
+				
+				if ( trim(sn).length() < 1 || sn.length() > 10 || ! isNumeric( sn ) ) {
+					cout <<endl<< "\twrong value entered!? " << sn <<endl;
+					sleep( 2 );
+					break;
+				}
+
+				unsigned int serial = atoi( sn.c_str() );
+				char fname[64];
+				sprintf( fname, "dbase/revoked/%010u", serial );
+				
+				cout <<endl<< "\tsearching database for: " << SSL_dir << fname << "-*" <<endl;
+				
+				vector <string> files;
+	
+				files.push_back( "ls -b " + string( SSL_dir) + fname + "-*" );
+				
+				val = exec( files );
+				
+				if ( files.size() < 1 || files[0].find( "No such file or directory" ) != string::npos ) { 
+					cout <<endl<< "\t"<< files[0] <<endl;
+					cout <<endl<<endl<< "\tPress any key to continue... "; getline ( cin, in );
+					break;
+				}
+				
+				
+				for ( int i = 0; i < files.size(); i ++ )
+						stringReplace( files[i], string( SSL_dir) + "dbase/revoked/", "" );
+						
+				files.insert( files.begin(), "" );
+		
+				if ( files.size() > 2 ) { // Multiple file with same serial number
+				
+					do { 
+						cout <<endl<< "\tMultiple Files matches same serial number !?: " <<endl<<endl;
+						
+						cout << "\t0) Cancel & Return" <<endl<<endl;
+						
+						for ( int i = 1; i < files.size(); i ++ )
+							cout << "\t" << i << ") " << files[i] <<endl;
+						
+						cout <<endl<<endl<< "\t> "; getline ( cin, in );
+						val = atoi( in.c_str() );
+						
+						if ( val < 0 || val > files.size() -1 ) {
+							cout <<endl<< "\tERROR: Wrong option!? " << val <<endl;
+							sleep( 2 );
+							continue;
+						}
+						
+						break;
+						
+					} while( true );
+					
+					if ( val == 0 ) cout <<endl<< "\tCanceled." <<endl;
+
+				} else 
+					val = 1; // only one file matches
+						
+				cout <<endl<< "\tselected file: " << files[ val ] <<endl;
+				
+				cout <<endl<< "\tread Certificate: " << ( val = ossl.readCertificate( ("dbase/revoked/" + files[ val ]).c_str())) <<endl;
+				
+				if ( val < 1 ) {
+					cout <<endl<< "\tERROR: reading certificate failes!?" <<endl;
+					sleep( 2 );
+					break;
+				}
+
+				cout <<endl<< "\t-----------------------------------------------------" <<endl;
+				
+				cout << "\t Issuer: " << ossl.certIssuer() << endl;
+				cout << "\tSubject: " << ossl.certSubject() << endl;
+				cout << "\t     Issue date: " << formattedGMTTime( ossl.certIssueTime()) <<endl;
+				cout << "\texpiration date: " << formattedGMTTime( ossl.certExpireTime()) <<endl<<endl;
+				cout << "\tCert.  Serial: " << ossl.certSerial() <<endl;
+
+				cout <<endl<<endl<< "\tRevert back the certificate (y/n)? "; getline ( cin, in );
+				
+				if ( trim( in ).length() < 1 || in != "y" )
+					cout <<endl<<"\tCancelled!" <<endl<<endl;
+				else {
+					cout <<endl<< "\trevert ceritifcate: " << ossl.restoreRevoked( serial, (time_t) atoi( files[val].substr( files[val].find( "-" ) + 1 ).c_str())) <<endl;
+				}
+
+				cout <<endl<< "\tpress Enter to Continue... "; getline ( cin, in );
 				break;
 			}
 
@@ -1085,6 +1216,8 @@ int main( int argc, char *argv[] )
     // Set Global Log level ERR, ThreadLog uses LOG_ALERT
     SysLog::setSysLogLevel(LOG_ERR);
     
+	ClearScreen();
+	
     cerr<<endl<< "\t... Version: " << Version << ", PID: " << getpid() <<endl; 
 
 	//verify the system call is safe
@@ -1113,7 +1246,7 @@ int main( int argc, char *argv[] )
 		strcpy( SSL_dir, dir.c_str() );
 	}
 
-	cout <<endl<< "\t... SSL dir: " << SSL_dir <<endl;
+	cout <<endl<< "\t... config/database directory: " << SSL_dir <<endl;
 	
 	sleep(2);
 	ClearScreen();

@@ -32,12 +32,16 @@
 
 # 2.03	Adding header to source files
 
+# 2.04  Added revoke/revert certificate features
+
+# 2.05  Compile with static link to openssl library
+
 ###### Compiled on Ubuntu 16.04
 ## Target: x86_64-linux-gnu
 ## gcc version 5.4.0 20160609 (Ubuntu 5.4.0-6ubuntu1~16.04.4)
 ## ##########################################################
 
-VERSION    = 2.04
+VERSION    = 2.05
 SERVER     = KeyMgr
 EXECUTABLE = $(SERVER)-$(VERSION)
 
@@ -52,7 +56,7 @@ CPPFLAGS = -c -std=c++17
 # -lcurses: NCurses library for terminal (console) handling 
 # -s: strippes
 # -g: to create Debug Content for gdb
-LPPFLAGS  = -lcrypto -s -lcurses
+LPPFLAGS  = -lcrypto -lz -ldl -static-libgcc -lcurses -s
 
 .DEFAULT_GOAL := $(EXECUTABLE)
 

@@ -1,3 +1,4 @@
+# KeyMgr
 
 The KeyMgr is an example program on how to use some of openssl functions to
 generate certificates and keypairs. The OSSL* wrapper classes in the Secure.cpp
@@ -21,6 +22,3 @@ the default certificate/database directory is "./ssl/" which can be changed
 by passing the -f switch on command line.
 
 
-
-
-# KeyMgr
